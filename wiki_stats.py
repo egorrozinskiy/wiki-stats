@@ -5,17 +5,12 @@ import sys
 import math
 import collections
 import array
- 
+
 import statistics
- 
-from matplotlib import rc
- 
- 
-rc('font', family='Droid Sans', weight='normal', size=14)
- 
-import matplotlib.pyplot as plt
- 
- 
+
+
+
+
 class WikiGraph:
 
     def load_from_file(self, filename):
@@ -83,7 +78,7 @@ class WikiGraph:
             k = self._offset[i+1] - self._offset[i]
             m = min(k,m)
         return m
-        print('Минимальное количество ссылок из статьи', m)
+        print('Минимальное количество ссылок из статьи', )
 
     def get_count_articles_with_min_links(self):
         s = 0
@@ -368,26 +363,26 @@ def hist(fname, data, bins, xlabel, ylabel, title, facecolor='green', alpha=0.5,
 if __name__ == '__main__':
     wg = WikiGraph()
     wg.load_from_file('wiki_small.txt')
-    wg.get_count_redirection()
-    wg.get_minimum_links_count()
-    wg.get_count_articles_with_min_links()
-    wg.get_maximum_links_count()
-    wg.get_count_articles_with_max_links()
-    wg.article_with_max_links()
-    wg.middle_count_links_in_article()
-    wg.min_count_links_to_article()
-    wg.count_articles_with_min_links_count()
-    wg.max_count_links_to_article()
-    wg.count_articles_with_max_links_count()
-    wg.article_with_max_links_count()
-    wg.middle_count_link_to_article()
-    wg.min_count_redirect_to_article()
-    wg.count_articles_with_min_redirects_count()
-    wg.max_count_redirects_to_article()
-    wg.count_articles_with_max_redirects_count()
-    wg.article_with_max_redirects_count()
-    wg.middle_count_redirects_to_article()
-    
+    print(wg.get_count_redirection())
+    print(wg.get_minimum_links_count())
+    print(wg.get_count_articles_with_min_links())
+    print(wg.get_maximum_links_count())
+    print(wg.get_count_articles_with_max_links())
+    print(wg.article_with_max_links())
+    print(wg.middle_count_links_in_article())
+    print(wg.min_count_links_to_article())
+    print(wg.count_articles_with_min_links_count())
+    print(wg.max_count_links_to_article())
+    print(wg.count_articles_with_max_links_count())
+    print(wg.article_with_max_links_count())
+    print(wg.middle_count_link_to_article())
+    print(wg.min_count_redirect_to_article())
+    print(wg.count_articles_with_min_redirects_count())
+    print(wg.max_count_redirects_to_article())
+    print(wg.count_articles_with_max_redirects_count())
+    print(wg.article_with_max_redirects_count())
+    print(wg.middle_count_redirects_to_article())
+
 
 
     if len(sys.argv) != 2:
