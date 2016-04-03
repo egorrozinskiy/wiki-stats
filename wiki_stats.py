@@ -8,7 +8,12 @@ import array
 
 import statistics
 
-
+from matplotlib import rc
+"""
+rc('font', family='Droid Sans', weight='normal', size=14)
+"""
+import matplotlib.pyplot as plt
+import matplotlib.mlab as mlab
 
 
 class WikiGraph:
