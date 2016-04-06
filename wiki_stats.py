@@ -1,17 +1,15 @@
-
 import sys
 import math
 import collections
 import array
 
 import statistics
-
 from matplotlib import rc
-"""
 rc('font', family='Droid Sans', weight='normal', size=14)
-"""
+
+
 import matplotlib.pyplot as plt
-import matplotlib.mlab as mlab
+
 
 
 class WikiGraph:
@@ -46,7 +44,7 @@ class WikiGraph:
 
         print('Граф загружен')
 
-    
+
     def get_number_of_links_from(self, _id):
         return len(self._links[self._offset[_id]:self._offset[_id+1]])
 
@@ -126,8 +124,8 @@ class WikiGraph:
 
 
     def middle_count_links_in_article(self):
-        countlinks_from = list(map(self.get_number_of_links_from, range(self.get_number_of_pages())))
-        return statistics.mean(countlinks_from), statistics.stdev(countlinks_from)
+        middle_counr_links_in_article = [wg.get_number_of_links_from(i) for i in range(wg.get_number_of_pages()) if not wg.is_redirect(i)]
+        return '%0.2f'%statistics.mean(middle_counr_links_in_article),'%0.2f'%statistics.stdev(middle_counr_links_in_article)
 
     def min_count_links_to_article(self):
         countlinks_to = [0 for i in range(self.get_number_of_pages())]
@@ -189,12 +187,10 @@ class WikiGraph:
     def middle_count_link_to_article(self):
         count_links_to = [0 for i in range(self.get_number_of_pages())]
         for i in range(self.get_number_of_pages()):
-            for x in self.get_links_from(i):
-                count_links_to[x] += 1
-                if self.is_redirect == 1:
-                    count_links_to[x] -= 1
-        _maxi = max(count_links_to)
-        return statistics.mean(count_links_to)
+            if not self.is_redirect(i):
+                for x in self.get_links_from(i):
+                    count_links_to[x] += 1
+        return '%0.2f'%statistics.mean(count_links_to), '%0.2f'%statistics.stdev(count_links_to)
 
     def min_count_redirect_to_article(self):
         counter = collections.defaultdict(int)
@@ -208,7 +204,7 @@ class WikiGraph:
             if counter[i] < mini:
                 mini = counter[i]
         return mini
-        print('минимальное количество перенаправлений на статью', mini)
+
 
 
 
@@ -235,7 +231,7 @@ class WikiGraph:
             if counter[i] > maxi:
                 maxi = counter[i]
         return maxi
-        print('максимальное количество перенаправлений на статью', maxi)
+
 
 
 
@@ -255,7 +251,7 @@ class WikiGraph:
             if maxi == counter[i]:
                 k += 1
         return k
-        print('количество статей с максимальным количеством перенаправлений', k)
+
 
 
     def article_with_max_redirects_count(self):
@@ -272,7 +268,7 @@ class WikiGraph:
                 maxi = counter[i]
                 index = i
         return self.get_title(index)
-        print('статья с наибольшим количеством перенаправлений', self.get_title(index))
+
 
 
 
@@ -282,41 +278,46 @@ class WikiGraph:
             for x in self.get_links_from(i):
                 if self.is_redirect(i) == 1:
                     redirects_to[x] += 1
-        return statistics.mean(redirects_to)
+        return '%0.2f'%statistics.mean(redirects_to), '%0.2f'%statistics.stdev(redirects_to)
 
 
-    
+    def hist(fname, data, bins, xlabel, ylabel, title, facecolor='green', alpha=0.5, transparent=True, **kwargs):
+        plt.clf()
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.title(title)
+        plt.grid(True)
+        plt.hist(x=data,bins=bins,color=facecolor,label=title,**kwargs)
+        plt.savefig(fname,transparent=transparent)
+        plt.show()
+
+
 
 
 if __name__ == '__main__':
     wg = WikiGraph()
     wg.load_from_file('wiki_small.txt')
-    print(wg.get_count_redirection())
-    print(wg.get_minimum_links_count())
-    print(wg.get_count_articles_with_min_links())
-    print(wg.get_maximum_links_count())
-    print(wg.get_count_articles_with_max_links())
-    print(wg.article_with_max_links())
-    print(wg.middle_count_links_in_article())
-    print(wg.min_count_links_to_article())
-    print(wg.count_articles_with_min_links_count())
-    print(wg.max_count_links_to_article())
-    print(wg.count_articles_with_max_links_count())
-    print(wg.article_with_max_links_count())
-    print(wg.middle_count_link_to_article())
-    print(wg.min_count_redirect_to_article())
-    print(wg.count_articles_with_min_redirects_count())
-    print(wg.max_count_redirects_to_article())
-    print(wg.count_articles_with_max_redirects_count())
-    print(wg.article_with_max_redirects_count())
-    print(wg.middle_count_redirects_to_article())
-  
-
-
-
-
-
-
-
-
-
+    print('Количество статей с перенаправлением:', wg.get_count_redirection())
+    print('Минимальное количество ссылок из статьи:', wg.get_minimum_links_count())
+    print('Количество статей с минимальным количеством ссылок:', wg.get_count_articles_with_min_links())
+    print('Максимальное количество ссылок из статьи:', wg.get_maximum_links_count())
+    print('Количество статей с максимальным количеством ссылок:', wg.get_count_articles_with_max_links())
+    print('Статья с наибольшим количеством ссылок:', wg.article_with_max_links())
+    print('Среднее количество ссылок в статье, среднеквадратичное отклонение :', wg.middle_count_links_in_article())
+    print('Минимальное количество ссылок на статью:', wg.min_count_links_to_article())
+    print('Количество статей с минимальным количеством внешних ссылок:', wg.count_articles_with_min_links_count())
+    print('Максимальное количество ссылок на статью:', wg.max_count_links_to_article())
+    print('Количество статей с максимальным количеством внешних ссылок:', wg.count_articles_with_max_links_count())
+    print('Статья с наибольшим количеством внешних ссылок:', wg.article_with_max_links_count())
+    print('Среднее количество внешних ссылок на статью, среднеквадратичное отклонение:', wg.middle_count_link_to_article())
+    print('Минимальное количество перенаправлений на статью:', wg.min_count_redirect_to_article())
+    print('Количество статей с минимальным количеством внешних перенаправлений:', wg.count_articles_with_min_redirects_count())
+    print('Максимальное количество перенаправлений на статью:', wg.max_count_redirects_to_article())
+    print('Количество статей с максимальным количеством внешних перенаправлений: ', wg.count_articles_with_max_redirects_count())
+    print('Статья с наибольшим количеством внешних перенаправлений:', wg.article_with_max_redirects_count())
+    print('Среднее количество внешних перенаправлений на статью,среднеквадратичное отклонение :', wg.middle_count_redirects_to_article())
+    hist(fname='Распределение количества ссылок из статьи.png', data=[wg.get_number_of_links_from(i) for i in range(wg._n)], bins=200, xlabel='Количество статей', ylabel="Количество ссылок", title="Распределение количества ссылок из статьи")
+    hist(fname='Распределение количества ссылок на статью.png', data=[countlinks_to[i] for i in range(wg._n)], bins=200, xlabel='Количество статей', ylabel="Количество ссылок", title="Распределение количества ссылок на статью")
+    hist(fname='Распределение количества перенаправлений на статью.png', data=[redirects_to[i] for i in range(wg._n)], bins=50, xlabel='Количество статей', ylabel="Количество ссылок", title="Распределение количества редиректов на статью")
+    hist(fname='Распределение размеров статей.png', data=[wg._sizes[i] for i in range(wg._n)], bins=50, xlabel='Количество статей', ylabel="Количество ссылок", title="Распределение размеров статей")
+    hist(fname='Распределение размеров статей(в логарифмическом масштабе.png', data=[wg._sizes[i] for i in range(wg._n)], bins=50, xlabel='Количество статей', ylabel="Количество ссылок", title="Распределение размеров статей (log)", log=True)
