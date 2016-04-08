@@ -291,7 +291,25 @@ class WikiGraph:
         plt.savefig(fname,transparent=transparent)
         plt.show()
 
-
+    def bfs(self,a,b):
+        fired = {a}
+        queue = [a]
+        path = []
+        while queue:
+            current = queue.pop(0)
+            print(self.get_links_from(self.get_id(current)))
+            for neighbour in self.get_links_from(self.get_id(current)):
+                if neighbour not in fired:
+                    fired.add(neighbour)
+                    queue.append(neighbour)
+                    path.append(neighbour)
+                    if neighbour == b:
+                        break
+        return path
+        
+    def path(self,a,b):
+        path = wg.bfs(a,b)
+        return path
 
 
 if __name__ == '__main__':
@@ -321,3 +339,4 @@ if __name__ == '__main__':
     hist(fname='Распределение количества перенаправлений на статью.png', data=[redirects_to[i] for i in range(wg._n)], bins=50, xlabel='Количество статей', ylabel="Количество ссылок", title="Распределение количества редиректов на статью")
     hist(fname='Распределение размеров статей.png', data=[wg._sizes[i] for i in range(wg._n)], bins=50, xlabel='Количество статей', ylabel="Количество ссылок", title="Распределение размеров статей")
     hist(fname='Распределение размеров статей(в логарифмическом масштабе.png', data=[wg._sizes[i] for i in range(wg._n)], bins=50, xlabel='Количество статей', ylabel="Количество ссылок", title="Распределение размеров статей (log)", log=True)
+    wg.path(wg.get_id("Python"), wg.get_id("Список_файловых_систем"))
