@@ -272,6 +272,23 @@ class WikiGraph:
                 maxi = counter[i]
                 index = i
         return self.get_title(index)
+    
+    def bfs(self,a,b):
+        fired = {a}
+        queue = [a]
+        path = []
+        while queue:
+            current = queue.pop(0)
+            print(self.get_links_from(self.get_id(current)))
+            for neighbour in self.get_links_from(self.get_id(current)):
+                if neighbour not in fired:
+                    fired.add(neighbour)
+                    queue.append(neighbour)
+                    path.append(neighbour)
+                    if neighbour == b:
+                        break
+        return path
+        
 
 
 
