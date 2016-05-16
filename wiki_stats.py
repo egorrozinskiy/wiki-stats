@@ -318,6 +318,10 @@ def hist(fname, data, bins, xlabel, ylabel, title, facecolor='green', alpha=0.5,
 if __name__ == '__main__':
     wg = WikiGraph()
     wg.load_from_file('wiki_small.txt')
+    links_on=[0]*wg.get_number_of_pages()
+    for m in range(wg.get_number_of_pages()):
+        for k in wg.get_links_from(m):
+            links_on[k]+=1
     print('Количество статей с перенаправлением:', wg.get_count_redirection())
     print('Минимальное количество ссылок из статьи:', wg.get_minimum_links_count())
     print('Количество статей с минимальным количеством ссылок:', wg.get_count_articles_with_min_links())
@@ -338,8 +342,7 @@ if __name__ == '__main__':
     print('Статья с наибольшим количеством внешних перенаправлений:', wg.article_with_max_redirects_count())
     print('Среднее количество внешних перенаправлений на статью,среднеквадратичное отклонение :', wg.middle_count_redirects_to_article())
     hist('Распределение количества ссылок из статьи.png', [wg.get_number_of_links_from(i) for i in range(wg._n)], 100, 'Количество статей', "Количество ссылок", "Распределение количества ссылок из статьи", range=(0,200))
-    hist('Распределение количества ссылок на статью.png', [[0 for i in range(wg.get_number_of_pages())][i] for i in range(wg._n)], 100, 'Количество статей', "Количество ссылок", "Распределение количества ссылок на статью", range=(0,200))
+    hist('Распределение количества ссылок на статью.png', [links_on[i] for i in range(wg._n)], 100, 'Количество статей', "Количество ссылок", "Распределение количества ссылок на статью", range=(0,200))
     hist('Распределение количества перенаправлений на статью.png', [[0 for i in range(wg.get_number_of_pages())][i] for i in range(wg._n)], 20, 'Количество статей', "Количество ссылок", "Распределение количества редиректов на статью", range=(0,20))
     hist('Распределение размеров статей.png', [wg._sizes[i] for i in range(wg._n)], 100, 'Количество статей', "Количество ссылок", "Распределение размеров статей", range=(0,100000))
     hist('Распределение размеров статей(в логарифмическом масштабе.png', numpy.log10([wg._sizes[i] for i in range(wg._n)]), 25, 'Количество статей', "Количество ссылок", "Распределение размеров статей (log)", range=(0,6))
-
